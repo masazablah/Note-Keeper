@@ -54,6 +54,22 @@ app.put('/notes/:id', async (req, res) => {
     }
 });
 
+app.get('/notes/search', async (req, res) => {
+    const query = req.query.query;
+    try {
+        const notes = await Note.find({
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { content: { $regex: query, $options: 'i' } }
+            ]
+        });
+        res.json(notes);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
