@@ -36,6 +36,24 @@ app.post('/notes', async (req, res) => {
     }
 });
 
+app.delete('/notes/:id', async (req, res) => {
+    try {
+        await Note.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Note deleted successfully' });
+    } catch (err) {
+        res.status(404).json({ message: 'Note not found' });
+    }
+});
+
+app.put('/notes/:id', async (req, res) => {
+    try {
+        const note = await Note.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json(note);
+    } catch (err) {
+        res.status(404).json({ message: 'Note not found' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
